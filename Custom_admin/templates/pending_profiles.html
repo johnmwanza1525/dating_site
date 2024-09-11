@@ -1,0 +1,28 @@
+{% extends 'base_admin.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Profiles Pending Approval</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Date Account Opened</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for profile in profiles %}
+            <tr>
+                <td>{{ profile.user.username }}</td>
+                <td>{{ profile.user.date_joined }}</td>
+                <td>{{ profile.user.email }}</td>
+                <td>
+                    <a href="{% url 'admin_profile_detail' profile.id %}" class="btn btn-info">View Details</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

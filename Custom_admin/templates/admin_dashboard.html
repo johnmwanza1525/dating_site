@@ -1,0 +1,101 @@
+{% extends 'base_admin.html' %}
+
+{% block page_title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+
+<style>
+ .menu{
+ top:40px;
+ }
+ </style>
+<!-- Cards Section -->
+<section class="container my-4">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Profiles Awaiting Approval</h5>
+                    <p class="card-text">{{ awaiting_approval_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Profile Images Awaiting Approval</h5>
+                    <p class="card-text">{{ awaiting_image_approval_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Total Profiles</h5>
+                    <p class="card-text">{{ total_profiles_count }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-danger text-white">
+                <div class="card-body">
+                    <h5 class="card-title">Active Subscriptions</h5>
+                    <p class="card-text">{{ active_subscriptions_count }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Recent Profiles Table -->
+<section class="container my-4">
+    <h3>Recently Created Profiles</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Created At</th>
+                <th>Image</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for profile in recent_profiles %}
+            <tr>
+                <td>{{ profile.user.username }}</td>
+                <td>{{ profile.user.email }}</td>
+                <td>{{ profile.user.date_joined }}</td>
+                <td>{% if profile.profileimage.url_set.first %}{{ profile.profileimage.url_set.first.thumbnail|safe }}{% else %}No Image{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<!-- Subscriptions Table -->
+<section class="container my-4">
+    <h3>Subscriptions</h3>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Picture</th>
+                <th>Name</th>
+                <th>Plan</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for subscription in subscriptions %}
+            <tr>
+                <td>{% if subscription.user.custom_admin.pic %} <img src="{{ subscription.user.custom_admin.pic.url }}" width="50" /> {% else %} No Picture {% endif %}</td>
+                <td>{{ subscription.user.get_full_name }}</td>
+                <td>{{ subscription.plan }}</td>
+                <td>{{ subscription.user.custom_admin.phone_number }}</td>
+                <td>{{ subscription.user.email }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

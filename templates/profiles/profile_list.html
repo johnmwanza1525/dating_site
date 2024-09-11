@@ -1,0 +1,40 @@
+{% extends 'base_admin.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Profile List</h2>
+    <form method="GET" action="{% url 'profile_list' %}" class="form-inline mb-4">
+        <input type="text" name="q" placeholder="Search by username, location, ethnicity" class="form-control mr-2" value="{{ request.GET.q }}">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Picture</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Gender</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for profile in profiles %}
+            <tr>
+                <td><img src="{{ profile.profileimage_set.first.image.url }}" alt="Profile Pic" width="50"></td>
+                <td>{{ profile.user.username }}</td>
+                <td>{{ profile.user.email }}</td>
+                <td>{{ profile.gender }}</td>
+                <td>
+                    <a href="{% url 'profile_detail' profile.pk %}" class="btn btn-info">View Details</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No profiles found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,292 @@
+<<<<<<< HEAD
+{% extends 'base.html' %}
+{% load static %}
+{% load chatextras %}
+
+{% block page_title %}Conversation Messages{% endblock %}
+
+{% block content %}
+<style>
+  .read-tick {
+    color: #007bff;
+    font-size: 1.2em;
+    margin-left: 5px;
+  }
+  .online-status, .typing-indicator {
+    color: #28a745;
+  }
+  .call-controls {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+  }
+  .call-button {
+    cursor: pointer;
+  }
+  #video-call-div {
+    display: none; /* Hidden by default, show when a call is active */
+  }
+</style>
+
+<div class="message-page container">
+    <div class="row">
+        <div class="card-container col-xs-12 col-lg-4 conversation-list">
+            <div class="card">
+                <ul>
+                    {% for k, v in all_conversations %}
+                    <li {% if conversation_id == k %}class="active-conversation" {% endif %} {% if not is_read_check|get_value:k %}class="unread-conversation" {% endif %} data-id="{{k}}">
+                        <a href="{% url 'chat' k %}">
+                            <div class="sender-container">
+                               <p class="message-sender">
+                                 {% if v.receiver == request.user %}
+                                   {{ v.sender }}
+                                {% else %}
+                                   {{ v.receiver }}
+                                {% endif %}
+                              </p>
+                              {% if v.sender.profileimage_set.first.is_verified %}
+                               <div class="sender-photo" style="background-image: url({{ MEDIA_URL }}{{ v.sender.profileimage_set.first.image.url }})"></div>
+                              {% else %}
+                                <div class="sender-photo"></div>
+                              {% endif %}
+                            </div>
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="card-container col-lg-8 message-box">
+            <div class="card">
+                <div class="message-box-content" style="overflow: auto;">
+                    {% for message in user_messages %}
+                    <div class="{% if message.sender == request.user %}message-sent{% else %}message-received{% endif %} message-container">
+                        <div class="{% if not message.is_read and message.sender != request.user %}unread-message{% endif %} message-bubble">
+                            <p>{{ message.message_content }}</p>
+                            {% if message.is_read %}
+                            <span class="read-tick">&#10004;</span>
+                            {% endif %}
+                        </div>
+                        <p class="message-date">{{ message.created_on }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="message-box-form-container">
+                    <form class="standard-form" method="POST">
+                        {{ message_form.as_p }} {% csrf_token %}
+                        <div class="dropdown dropdown-standard">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="{% url 'member_profile' receiver %}">View Profile</a>
+                                <a class="dropdown-item" href="{% url 'block_user' receiver %}">Block User</a>
+                            </div>
+                        </div>
+                        <input class="submit-success" type="submit" value="SEND" name="send_message" />
+                    </form>
+                    <div class="call-controls">
+                        <button class="call-button" onclick="startCall('voice')">Start Voice Call</button>
+                        <button class="call-button" onclick="startCall('video')">Start Video Call</button>
+                        <input type="file" id="file-upload" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="video-call-div">
+    <video muted id="local-video" autoplay></video>
+    <video id="remote-video" autoplay></video>
+    <div class="call-action-div">
+        <button class="btn btn-secondary btn-lg" id='mute_video' onclick="muteVideo()">Mute Video</button>
+        <button class="btn btn-secondary btn-lg" id='mute_audio' onclick="muteAudio()">Mute Audio</button>
+        <button class="btn btn-secondary btn-lg" id='sharescreen' onclick="sharescreen()">Share Screen</button>
+        <button class="btn btn-secondary btn-lg" onclick="stopCall(is_send=true)">Stop Call</button>
+    </div>
+</div>
+
+<script type="text/javascript" src="{%static 'js/chat.js'%}"></script>
+{% endblock %}
+=======
+{% extends 'base.html' %}  {% load static from static %} {% load chatextras %} {% block page_title %}Chat{% endblock %} {% block page_heading %}Chat{% endblock %} {% block content %}
+
+<div class="message-page container">
+    <div class="row">
+
+<div class="card-container col-xs-12 col-lg-4 conversation-list">
+    <div class="card">
+        <ul>
+            {% for k, v in all_conversations.items %}
+
+            <li {% if conversation_id == k %}class="active-conversation" {% endif %} 
+            {% if not is_read_check|get_value:k %}class="unread-conversation"{% endif %} data-id="{{k}}">
+            <!--<li {% if k == conversation_id %}class="active-conversation" {% endif %} -->
+            <!--{% if not is_read_check|get_value:k %}class="unread-conversation"{% endif %} data-id="{{k}}">-->
+
+                <a  href="{% url 'chat' k %}">
+                    <div class="sender-container">
+                        {% if v.receiver == request.user %}
+                        <p class="message-sender">{{v.sender}}</p>
+                        {% else %}
+                        <p class="message-sender">{{v.receiver}}</p>
+                        {% endif %}
+                        <p class="last-message-date">{{v.created_on}}</p>
+                        <!--{{v.is_read}}-->
+                    </div>
+                    <div class="sender-photo" style="background-image: url({% static 'temp/maxresdefault.jpg' %})"></div>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="card-container col-lg-8 message-box">
+    <div class="card">
+        <div class="message-box-content" style="overflow: auto;">
+            {% for message in user_messages %}
+                {% if message.sender == request.user %}
+                <div class="message-sent message-container">
+                {% else %}
+                <div class="message-received message-container">
+                {% endif %}
+                <div class="{% if not message.is_read and message.sender != request.user %}unread-message{%endif%} message-bubble">
+                    <p>{{ message.message_content }}</p>
+                </div>
+                <p class="message-date">{{ message.created_on }}</p>
+                </div>
+            {% endfor %}
+        
+        </div>
+        <div class="message-box-form-container">
+            <div class="new_message_button">
+                <button onclick="location.reload();"><i class="fas fa-sync-alt"></i> New Message Received. Update.</button>
+        </div>
+        <form class="standard-form" method="POST">
+            {{ message_form.as_p }}
+            {% csrf_token %}
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="{% url 'member_profile' receiver %}">View Profile</a>
+                    <a class="dropdown-item" onclick="send_wink_grid_link({{receiver}})">Send a Wink</a>
+                </div>
+            </div>
+            
+            <input class="submit-success" type="submit" value="SEND"/>
+        </form>
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+{%endblock%}
+
+{%block js%}
+<script>
+    // Duplicate of index
+    // Set CSFR token for ajax 
+  $.ajaxSetup({ 
+     beforeSend: function(xhr, settings) {
+         function getCookie(name) {
+             var cookieValue = null;
+             if (document.cookie && document.cookie != '') {
+                 var cookies = document.cookie.split(';');
+                 for (var i = 0; i < cookies.length; i++) {
+                     var cookie = jQuery.trim(cookies[i]);
+                     // Does this cookie string begin with the name we want?
+                     if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                         cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                         break;
+                     }
+                 }
+             }
+             return cookieValue;
+         }
+         if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+             // Only send the token to relative URLs i.e. locally.
+             xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+         }
+        } 
+    });
+    
+    function send_wink_grid_link(receiver_id) {
+        $.ajax({
+            url: "/chat/ajax/winks/",
+            datatype: 'json',
+            data: {
+                receiver_id: receiver_id
+            },
+            // success: function(json) {
+            // }
+
+            // error: function(xhr, errmsg, err) {
+            //     $('#results').html("<div class='alert-box alert radius' data-alert>Oops! We have encountered an error: " + errmsg +
+            //         " <a href='#' class='close'>&times;</a></div>"); // add the error to the dom
+            //     console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            // }
+        })
+    }
+
+    // Scroll message box to latest message
+    $('.message-box-content').scrollTop($('.message-box-content')[0].scrollHeight + parseInt($('.message-box-content').css("margin-bottom")));
+    // Scroll conversation list to current conversation
+    var url_id = /[^/]*$/.exec(window.location.pathname)[0]
+    $('li[data-id="' + url_id + '"]')[0].scrollIntoView()
+    // Scroll page to top
+    window.scrollTo(0, 0);
+    
+    function new_message_check() {
+      var url_id = /[^/]*$/.exec(window.location.pathname)[0]
+        // https://stackoverflow.com/questions/8376525/get-value-of-a-string-after-a-slash-in-javascript
+      $.ajax({
+        url: '/chat/ajax/new_message_check', 
+        data: {
+          'url_id': url_id
+        },
+        dataType: 'json',
+        success: function(data) {
+            if(data.conversation) {
+                $(".new_message_button").css("display", "flex");
+            }
+        },
+        complete: function(data) {
+          if(!data.conversation) {
+            setTimeout(new_message_check, 5000);
+          }
+        }
+      });
+    };
+    
+    function read_messages() {
+        var url_id = /[^/]*$/.exec(window.location.pathname)[0]
+        $.ajax({
+            url: "/chat/ajax/read/",
+            dataType: 'json',
+            data: {
+                'url_id' : url_id
+            },
+            success: function(data) {
+                if(data.conversation) {
+                    $(".new_message_button").css("display", "flex");
+                } else {
+                    $(".new_message_button").css("display", "none");
+                    setTimeout(new_message_check(), 6000)
+                }
+            }
+        });
+    }
+    
+    // Mark all messages as read
+    read_messages()
+
+
+</script>
+{% endblock %}
+
+>>>>>>> 4efebe4 (Switch from C9 to AWS C9)

@@ -1,0 +1,56 @@
+<<<<<<< HEAD
+{% extends 'base_preregister.html' %}
+{% block page_title %}Login{% endblock %}
+{% block content %}
+
+<!--Login form-->
+<section class="profile-card-container">
+    <div class="card-container card-margin-top">
+        <div class="card-form card account-access-form">
+            <div class="card-form-container">
+                <h3>Login to Your Account</h3>
+                {%if messages%}
+                 {%for message in messages%}
+                   <p class="text-info">{{message}}</p>
+                 {%endfor%}
+                {%endif%}
+                <hr>
+                <form class="standard-form" method="POST">
+                    {% csrf_token %}
+                    {{ login_form.as_p }} <!-- Render the form fields -->
+                    <button class="submit-wide submit-success" type="submit">Login</button>
+                </form>
+            </div>
+            <p class="forgot-password">Forgot password? Reset it <a href="{% url 'user_password_reset' %}">here</a></p>
+        </div>
+    </div>
+</section>
+
+<div class="footer-spacer"></div>
+
+=======
+{% extends 'base_preregister.html' %} {% block page_title %}Login{% endblock %} {% block page_heading %}Login{% endblock %} {% block content %}
+<!--<form method="POST">-->
+<!--    {% csrf_token %} {{ login_form }}-->
+<!--    <button type="submit">Login</button>-->
+<!--</form>-->
+
+
+<div class="card-container card-margin-top">
+    <div class="card-form card">
+        <div class="card-form-container">
+            <h3>Register an Account</h3>
+            <hr>
+            <form class="standard-form" method="POST">
+                {% csrf_token %} {{ login_form }}
+                <button class="submit-wide submit-success" type="submit">LOGIN</button>
+            </form>
+
+        </div>
+        <p class="forgot-password">Forgot password? Reset it <a href="{% url 'password_reset' %}">here</a></p>
+    </div>
+</div>
+<div class="footer-spacer">
+</div>
+>>>>>>> 4efebe4 (Switch from C9 to AWS C9)
+{% endblock %}

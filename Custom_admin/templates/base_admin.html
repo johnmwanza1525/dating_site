@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard{% endblock title %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        .navbar-brand img {
+            height: 50px;
+        }
+
+        .navbar, .footer {
+            background-color: #343a40;
+            color: white;
+        }
+
+        .sidebar {
+            height: 100vh;
+            background-color: #343a40;
+            padding-top: 20px;
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            max-width: 250px; /* Adjusted width for larger screens */
+            overflow-y: auto;
+            transition: all 0.3s ease-in-out;
+            z-index: 1000; /* Ensure sidebar stays on top */
+        }
+
+        .sidebar a {
+            color: white;
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background-color: #495057;
+            border-radius: 5px;
+        }
+
+        .dropdown-menu a {
+            color: #495057;
+        }
+
+        .content {
+            margin-left: 250px; /* Offset content for larger screens */
+            padding: 20px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .profile-img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+        }
+
+        .footer {
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                max-width: 100%; /* Sidebar takes full width */
+                height: auto;
+                position: relative;
+            }
+
+            .content {
+                margin-left: 0;
+                padding: 10px;
+            }
+
+            .navbar .container-fluid {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .navbar-brand {
+                margin-left: 0;
+            }
+
+            .navbar-nav .nav-item {
+                margin-left: 0;
+            }
+
+            .profile-img {
+                width: 100px;
+                height: 100px;
+            }
+
+            .sidebar {
+                padding: 10px;
+            }
+
+            .footer {
+                padding: 5px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="/#">
+                Grand Anonymous
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar">
+                <div class="text-center">
+                    <img src="{{ admin.pic.url }}" alt="Grand Anonymous" class="profile-img">
+                    <h4>Admin</h4>
+                    <h6 class="text-info">{{ request.user.username }}</h6>
+                </div>
+                <a href="/#"><i class="fa fa-dashboard text-info"></i> Dashboard</a>
+                <a href="{% url 'pending_profiles' %}"><i class="fas fa-clock text-info"></i> Pending Profiles</a>
+                <a href="{%url 'profile_list'%}"><i class="fa fa-list icon text-info"></i>Profile List</a>
+
+                <a href="{% url 'profile_picture_verification' %}"><i class="fas fa-check icon text-info"></i> Pictures Verification</a>
+                 <a href="/admin" onclick="return confirm('You\'re Proceeding to Super Administrator site Designed for Verbose Override management, Caution this is a highly sensitive Panel. Do you want to continue?');">
+        <i class="fa fa-user-secret icon"></i>
+        <span>Super Admin</span>
+    </a>
+                {%comment%}
+                <a href="{%url 'stock_item_updates_report'%}"><i class="fas fa-file-alt icon text-info"></i>     Stock Update Reports</a>
+                <a href="{%url 'profile_view'%}"><i class="fa fa-user icon text-info"></i> Profile</a>
+                con"></i>
+        <span>Super Admin</span>
+    </a>
+                <!-- Expenditure Dropdown -->
+                <div class="dropdown mt-3">
+                    <a class="dropdown-toggle" href="#" role="button" id="expenditureDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-money-bill-wave text-info"></i> Expenditure
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="expenditureDropdown">
+                        <li><a class="dropdown-item" href="{% url 'daily_expenditure' %}"><i class="fas fa-calendar-day"></i> Daily Expenditure</a></li>
+                        <li><a class="dropdown-item" href="{% url 'daily_expenditure_report' %}"><i class="fas fa-calendar-week"></i>Expenditure Records</a></li>
+                {%endcomment%}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Content -->
+            <div class="col-md-10 content">
+                {% block content %}
+                {% endblock content %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 Grand Anonymous. All Rights Reserved.</p>
+        <p><a href="/#" style="color: white;">Contact Us</a></p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

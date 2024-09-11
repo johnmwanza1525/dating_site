@@ -1,0 +1,63 @@
+{% extends 'base_admin.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>{{ profile.user.username }}'s Profile</h2>
+    <table class="table table-bordered">
+        <tr>
+            <th>Name</th>
+            <td>{{ profile.user.username }}</td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td>{{ profile.user.email }}</td>
+        </tr>
+        <tr>
+            <th>Gender</th>
+            <td>{{ profile.gender }}</td>
+        </tr>
+        <tr>
+            <th>Location</th>
+            <td>{{ profile.location }}</td>
+        </tr>
+        <tr>
+            <th>Ethnicity</th>
+            <td>{{ profile.ethnicity }}</td>
+        </tr>
+        <tr>
+            <th>Birth Date</th>
+            <td>{{ profile.birth_date }}</td>
+        </tr>
+        <tr>
+            <th>Body Type</th>
+            <td>{{ profile.body_type }}</td>
+        </tr>
+        <tr>
+            <th>Relationship Status</th>
+            <td>{{ profile.relationship_status }}</td>
+        </tr>
+        <tr>
+            <th>Hair Colour</th>
+            <td>{{ profile.hair_colour }}</td>
+        </tr>
+        <tr>
+            <th>Pictures</th>
+            <td>
+                {% for image in images %}
+                    <img src="{{ image.image.url }}" alt="Profile Pic" width="100" class="mr-2 mb-2">
+                {% empty %}
+                    No pictures available.
+                {% endfor %}
+            </td>
+        </tr>
+    </table>
+
+    <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="delete">
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this profile?');">Delete Profile</button>
+    </form>
+
+    <a href="{% url 'profile_list' %}" class="btn btn-secondary mt-3">Back to List</a>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+
+
+{%extends 'base_admin.html'%}
+{%block content%}
+<form method="get" action="{% url 'profile_picture_verification' %}">
+    <input type="text" name="q" placeholder="Search by username or email" value="{{ request.GET.q }}">
+    <button type="submit">Search</button>
+</form>
+
+<table>
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Pictures Awaiting Approval</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.awaiting_approval_count }}</td>
+                <td>
+                    <a href="{% url 'approve_profile_pictures' user.id %}">View & Approve</a>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<br><br><br><br><br><br><br><br><br><br><br><br>
+{%endblock content%}

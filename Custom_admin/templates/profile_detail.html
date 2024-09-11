@@ -1,0 +1,39 @@
+{% extends 'base_admin.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Profile Details</h2>
+    <div class="card mb-4">
+        <div class="card-body">
+            <h4 class="card-title">{{ profile.user.username }}</h4>
+            <p class="card-text"><strong>Email:</strong> {{ profile.user.email }}</p>
+            <p class="card-text"><strong>Bio:</strong> {{ profile.bio }}</p>
+            <p class="card-text"><strong>Gender:</strong> {{ profile.gender }}</p>
+            <p class="card-text"><strong>Ethnicity:</strong> {{ profile.ethnicity }}</p>
+            <p class="card-text"><strong>Location:</strong> {{ profile.location }}</p>
+            <p class="card-text"><strong>Looking for:</strong> {{ profile.looking_for }}</p>
+            <p class="card-text"><strong>Body Type:</strong> {{ profile.body_type }}</p>
+            <p class="card-text"><strong>Height:</strong> {{ profile.height }}</p>
+            <p class="card-text"><strong>Relationship Status:</strong> {{ profile.relationship_status }}</p>
+            <p class="card-text"><strong>Education:</strong> {{ profile.education }}</p>
+            <p class="card-text"><strong>Hair Colour:</strong> {{ profile.hair_colour }}</p>
+            <p class="card-text"><strong>Hair Length:</strong> {{ profile.hair_length }}</p>
+            <p class="card-text"><strong>Birth Date:</strong> {{ profile.birth_date }}</p>
+
+            {% if images %}
+                <h5 class="mt-4">Profile Images</h5>
+                <div class="row">
+                    {% for image in images %}
+                    <div class="col-md-4">
+                        {{ image.thumbnail|safe }}
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="card-footer text-right">
+            <a href="{% url 'approve_profile' profile.id %}" class="btn btn-success" onclick="return confirm('Are you sure you want to approve this profile?');">Approve</a>
+            <a href="{% url 'reject_profile' profile.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to reject this profile?');">Reject</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

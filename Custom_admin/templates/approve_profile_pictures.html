@@ -1,0 +1,18 @@
+{%extends 'base_admin.html'%}
+{%block content%}
+
+<h2>Approve Profile Pictures for {{ user.username }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    <div>
+        {% for image in profile_images %}
+            <div>
+                {{ image.thumbnail|safe }}
+                <p>{{ image.is_verified }}</p>
+            </div>
+        {% endfor %}
+    </div>
+    <button type="submit">Approve All</button>
+</form>
+{%endblock content%}
